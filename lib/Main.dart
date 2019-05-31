@@ -4,6 +4,7 @@ import 'package:toa_flutter/ui/views/events/EventsListPage.dart';
 import 'package:toa_flutter/internationalization/LocalizationsDelegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,6 +13,8 @@ class MyApp extends StatelessWidget {
   // Root widget
   @override
   Widget build(BuildContext context) {
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+    firebaseMessaging.requestNotificationPermissions(); // Permissions dialog for iOS
     return new DynamicTheme(
         defaultBrightness: Brightness.light,
         data: (brightness) => ThemeData(
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
             theme: theme,
             home: EventsListPage(),
             supportedLocales: [
-              const Locale('en', 'US'), // English, must be first
+              const Locale('en', 'US'), // English, should be first
               const Locale('he', 'IL'), // Hebrew
             ],
             localizationsDelegates: [

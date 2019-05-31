@@ -30,6 +30,7 @@ dependencies:
   firebase_database: ^1.0.5
   firebase_storage: ^1.0.4
   firebase_analytics: ^1.1.0
+  firebase_messaging: ^4.0.0+4
   google_sign_in: ^3.2.4
 
   flutter:
