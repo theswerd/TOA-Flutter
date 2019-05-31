@@ -1,68 +1,34 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
 
 class User {
   User({
-    this.name,
+    this.displayName,
+    this.photoURL,
+    this.team,
     this.level = 1,
-    this.apiKey,
-    this.favTeams,
-    this.favEvents
+    this.favoriteTeams,
+    this.favoriteEvents
   });
 
-  final String name;
+  final String displayName;
+  final String photoURL;
+  final String team;
   final int level;
-  final String apiKey;
-  final Map favTeams;
-  final Map favEvents;
+  final List<String> favoriteTeams;
+  final List<String> favoriteEvents;
 
-  static User fromDataSnapshot(DataSnapshot snapshot) {
-    Map<dynamic, dynamic> map = snapshot.value;
+  static User fromResponse(String response) {
+    return User.fromMap(jsonDecode(response));
+  }
 
+  factory User.fromMap(Map<String, dynamic> map){
     return User(
-      name: getValue('fullName', map),
-      level: getValue('level', map),
-      apiKey: getValue('APIKey', map),
-      favTeams: getValue('favTeams', map),
-      favEvents: getValue('favEvents', map)
+        displayName: map['displayName'],
+        photoURL: map['photoURL'],
+        team: map['team'],
+        level: map['level'],
+        favoriteTeams: List<String>.from(map['favorite_teams']),
+        favoriteEvents: List<String>.from(map['favorite_events'])
     );
-  }
-
-
-  static dynamic getValue(String key, Map map) {
-    if (map != null && map[key] != null) {
-      return map[key];
-    }
-    return null;
-  }
-
-
-  List<String> getTeams() {
-    List<String> toReturn = List();
-    if (favTeams != null) {
-      List teams = favTeams.keys.toList();
-      for (int i = 0; i < teams.length; i++) {
-        String key = teams[i].toString();
-        String value = favTeams[key].toString();
-        if (value == 'true') {
-          toReturn.add(key);
-        }
-      }
-    }
-    return toReturn;
-  }
-
-  List<String> getEvents() {
-    List<String> toReturn = List();
-    if (favEvents != null) {
-      List events = favEvents.keys.toList();
-      for (int i = 0; i < events.length; i++) {
-        String key = events[i].toString();
-        String value = favEvents[key].toString();
-        if (value == 'true') {
-          toReturn.add(key);
-        }
-      }
-    }
-    return toReturn;
   }
 }

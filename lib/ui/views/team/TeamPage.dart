@@ -3,7 +3,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:toa_flutter/ui/Colors.dart' as TOAColors;
 import 'package:toa_flutter/providers/StaticData.dart';
 import 'package:toa_flutter/providers/ApiV3.dart';
-import 'package:toa_flutter/providers/Firebase.dart';
+import 'package:toa_flutter/providers/Cloud.dart';
 import 'package:toa_flutter/models/Team.dart';
 import 'package:toa_flutter/models/TeamSeasonRecord.dart';
 import 'package:toa_flutter/ui/views/team/subpages/TeamResults.dart';
@@ -67,8 +67,8 @@ class TeamPageState extends State<TeamPage> with TickerProviderStateMixin {
   }
 
   Future<void> loadUser() async {
-    String uid = await Firebase().getUID();
-    bool isFav = await Firebase().isFavTeam(teamKey);
+    String uid = await Cloud().getUID();
+    bool isFav = await Cloud().isFavTeam(teamKey);
     setState(() {
       this.isFav = isFav;
       this.firebaseConnected = uid != null;
@@ -113,7 +113,7 @@ class TeamPageState extends State<TeamPage> with TickerProviderStateMixin {
                   icon: Icon(MdiIcons.star),
                   tooltip: local.get('general.remove_from_mytoa'),
                   onPressed: () {
-                    Firebase().setFavTeam(teamKey, false);
+                    Cloud().setFavTeam(teamKey, false);
                     setState(() {});
                   }
                 ) : null,
@@ -121,7 +121,7 @@ class TeamPageState extends State<TeamPage> with TickerProviderStateMixin {
                   icon: Icon(MdiIcons.starOutline),
                   tooltip: local.get('general.add_to_mytoa'),
                   onPressed: () {
-                    Firebase().setFavTeam(teamKey, true);
+                    Cloud().setFavTeam(teamKey, true);
                     setState(() {});
                   }
                 ) : null

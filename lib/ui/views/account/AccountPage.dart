@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:toa_flutter/providers/Cloud.dart';
 import 'package:toa_flutter/ui/widgets/TeamListItem.dart';
 import 'package:toa_flutter/ui/widgets/EventListItem.dart';
 import 'package:toa_flutter/ui/widgets/Title.dart';
 import 'package:toa_flutter/providers/ApiV3.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:toa_flutter/models/User.dart';
 import 'package:toa_flutter/models/Team.dart';
 import 'package:toa_flutter/models/Event.dart' as EventModel;
@@ -36,7 +36,7 @@ class AccountPageState extends State<AccountPage> {
 
   Future<void> loadUser() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    User userData = User.fromDataSnapshot(await FirebaseDatabase.instance.reference().child('Users').child(user.uid).once());
+    User userData = await Cloud().getUser();
     setState(() {
       this.user = user;
       this.userData = userData;
@@ -126,7 +126,7 @@ class AccountPageState extends State<AccountPage> {
 
   Future<List<Team>> getTeams() async {
     List<Team> teams = List();
-    for (String teamKey in userData.getTeams()) {
+    for (String teamKey in userData.favoriteTeams) {
       teams.add(await ApiV3().getTeam(teamKey));
     }
     return teams;
@@ -134,7 +134,7 @@ class AccountPageState extends State<AccountPage> {
 
   Future<List<EventModel.Event>> getEvents() async {
     List<EventModel.Event> events = List();
-    for (String eventKey in userData.getEvents()) {
+    for (String eventKey in userData.favoriteEvents) {
       events.add(await ApiV3().getEvent(eventKey));
     }
     return events;

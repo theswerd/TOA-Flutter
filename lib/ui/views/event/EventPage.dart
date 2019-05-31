@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toa_flutter/providers/Firebase.dart';
+import 'package:toa_flutter/providers/Cloud.dart';
 import 'package:toa_flutter/models/Event.dart';
 import 'package:toa_flutter/ui/views/event/subpages/EventInfo.dart';
 import 'package:toa_flutter/ui/views/event/subpages/EventTeams.dart';
@@ -23,8 +23,8 @@ class EventPageState extends State<EventPage> {
   bool isFav = false;
 
   Future<void> loadUser() async {
-    String uid = await Firebase().getUID();
-    bool isFav = await Firebase().isFavEvent(widget.event.eventKey);
+    String uid = await Cloud().getUID();
+    bool isFav = await Cloud().isFavEvent(widget.event.eventKey);
     setState(() {
       this.isFav = isFav;
       this.firebaseConnected = uid != null;
@@ -74,10 +74,10 @@ class EventPageState extends State<EventPage> {
                 PopupMenuButton(
                   onSelected: (String value) {
                     if (value == 'add_to_mytoa') {
-                      Firebase().setFavEvent(eventKey, true);
+                      Cloud().setFavEvent(eventKey, true);
                     }
                     if (value == 'remove_from_mytoa') {
-                      Firebase().setFavEvent(eventKey, false);
+                      Cloud().setFavEvent(eventKey, false);
                     }
                     setState(() {});
                   },
